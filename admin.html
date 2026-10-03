@@ -2,57 +2,74 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Easy Management</title>
+<title>EASY ADMIN - BLUE AI</title>
 <style>
-body{font-family:Arial;background:#eef2f7;margin:0}
-.login-wrap{height:100vh;display:flex;justify-content:center;align-items:center}
-.box{background:white;padding:35px;border-radius:18px;width:90%;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,0.1);text-align:center}
-input{width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box}
-button{width:100%;padding:13px;background:#0a3d8f;color:white;border:none;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
-#dashboard{display:none;padding:20px;max-width:900px;margin:auto}
-.header{background:#0a3d8f;color:white;padding:20px;border-radius:15px;display:flex;justify-content:space-between;align-items:center}
-.card{background:white;padding:20px;border-radius:15px;margin-top:15px;box-shadow:0 3px 10px rgba(0,0,0,0.05)}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:10px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
-.badge{padding:4px 10px;border-radius:20px;font-size:12px;color:white}
-.ok{background:#25D366}.pending{background:#ff9800}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inter:wght@400;600&display=swap');
+body{margin:0;background:#060c1a;color:#e0f2ff;font-family:'Inter',sans-serif;padding:16px}
+h1{font-family:'Orbitron';color:#38bdf8;text-shadow:0 0 10px #0ea5e9}
+.card{background:linear-gradient(180deg, rgba(14,165,233,0.15), rgba(6,12,26,0.8));border:1px solid rgba(56,189,248,0.3);border-radius:20px;padding:18px;margin-bottom:18px;box-shadow:0 0 20px rgba(14,165,233,0.15);backdrop-filter:blur(10px)}
+table{width:100%;border-collapse:collapse}
+th{color:#7dd3fc;font-size:12px;letter-spacing:1px;padding:10px}
+td{padding:14px 10px;border-bottom:1px solid rgba(56,189,248,0.1);font-size:14px}
+.badge{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid}
+.b-Baru{background:rgba(251,191,36,0.15);color:#fbbf24;border-color:#fbbf24}
+.b-Tindakan{background:rgba(56,189,248,0.15);color:#38bdf8;border-color:#38bdf8}
+.b-Selesai{background:rgba(52,211,153,0.15);color:#34d399;border-color:#34d399}
+.ai-badge{background:rgba(168,85,247,0.2);color:#c084fc;border:1px solid #a855f7;padding:4px 10px;border-radius:99px;font-size:11px}
+input,select{width:100%;padding:14px;background:rgba(6,12,26,0.8);border:1px solid rgba(56,189,248,0.4);border-radius:12px;color:#fff;margin-bottom:12px;box-sizing:border-box}
+input:focus{outline:none;box-shadow:0 0 10px #0ea5e9;border-color:#38bdf8}
+.btn{width:100%;padding:15px;background:linear-gradient(90deg,#0ea5e9,#38bdf8);border:none;border-radius:12px;color:#00101d;font-weight:800;letter-spacing:1px;cursor:pointer;box-shadow:0 0 15px #0ea5e9}
+.btn:active{transform:scale(0.98)}
 </style>
 </head>
 <body>
-<div id="loginPage" class="login-wrap"><div class="box">
-<h2 style="color:#0a3d8f">EASY ADMIN</h2><p style="color:#888">Desa Tun Razak</p>
-<input type="text" id="u" placeholder="Username (admin)">
-<input type="password" id="p" placeholder="Password (admin123)">
-<button onclick="doLogin()">LOGIN</button><p id="err" style="color:red;font-size:13px"></p>
-<p style="font-size:11px;color:#aaa;margin-top:15px">Demo: admin / admin123</p>
-</div></div>
-
-<div id="dashboard">
-<div class="header"><h3>EASY MANAGEMENT - DASHBOARD</h3><button onclick="logout()" style="width:auto;padding:8px 15px;background:white;color:#0a3d8f">Logout</button></div>
-
-<div class="card"><h3>📊 Ringkasan Hari Ini</h3>
-<p>💰 Kutipan: <b>RM 1,250</b> | 🏠 Tunggakan: <b>12 unit</b> | 🛠️ Aduan Baru: <b>3</b></p>
+<h1>⚡ EASY MANAGEMENT AI</h1>
+<div class="card">🤖 <b>AI Agents Online:</b> 3 Active | 💰 Kutipan: RM 1,250 | 🛠️ Aduan Baru: <span id="aCount">0</span></div>
+<div class="card">
+<b style="color:#38bdf8">📡 SENARAI ADUAN + AI ASSIGNMENT</b>
+<table><thead><tr><th>UNIT</th><th>ADUAN</th><th>AI AGENT</th><th>STATUS</th></tr></thead><tbody id="list"></tbody></table>
 </div>
-
-<div class="card"><h3>📝 Senarai Aduan Penduduk</h3>
-<table><tr><th>Unit</th><th>Aduan</th><th>Status</th></tr>
-<tr><td>4-05-11</td><td>Lif rosak</td><td><span class="badge pending">Dalam Tindakan</span></td></tr>
-<tr><td>4-12-03</td><td>Lampu koridor</td><td><span class="badge ok">Selesai</span></td></tr>
-<tr><td>4-08-16</td><td>Paip bocor</td><td><span class="badge pending">Baru</span></td></tr>
-</table></div>
-
-<div class="card"><h3>➕ Tambah Rekod Baru</h3>
-<input type="text" placeholder="No Unit (cth: 4-14-16)"><input type="text" placeholder="Perkara">
-<button>Simpan Rekod</button></div>
-
+<div class="card">
+<b style="color:#38bdf8">➕ TAMBAH REKOD BARU (AI AUTO-ASSIGN)</b><br><br>
+<input id="unit" placeholder="Unit: 4-14-16" value="4-14-16">
+<input id="aduan" placeholder="Aduan: paip bocor / lif rosak / sampah">
+<select id="status"><option>Baru</option><option>Dalam Tindakan</option><option>Selesai</option></select>
+<button class="btn" onclick="save()">🚀 SIMPAN & ASSIGN AI AGENT</button>
+<p id="msg" style="display:none;text-align:center;color:#34d399;margin-top:10px">✅ Berjaya! AI Agent telah di-assign!</p>
 </div>
 <script>
-function doLogin(){
- if(u.value=='admin' && p.value=='admin123'){
-  loginPage.style.display='none'; dashboard.style.display='block';
- } else { err.innerText='Salah! Guna admin / admin123'; }
+let data=JSON.parse(localStorage.getItem('easyBlueAI')||'[]');
+if(data.length==0){data=[{unit:'4-05-11',aduan:'Lif rosak',agent:'ElectroBot ⚡',status:'Dalam Tindakan'},{unit:'4-14-16',aduan:'Sewa tertunggak',agent:'FinanceBot 💰',status:'Baru'}]}
+function getAIAgent(text){
+  text=text.toLowerCase();
+  if(text.includes('paip')||text.includes('bocor')||text.includes('air')) return 'AquaBot 💧';
+  if(text.includes('lif')||text.includes('elektrik')||text.includes('lampu')) return 'ElectroBot ⚡';
+  if(text.includes('sewa')||text.includes('bayar')||text.includes('kutipan')) return 'FinanceBot 💰';
+  if(text.includes('sampah')||text.includes('bising')||text.includes('parking')) return 'GuardBot 🛡️';
+  return 'GeneralBot 🤖';
 }
-function logout(){ location.reload(); }
+function render(){
+  let tb=document.getElementById('list');tb.innerHTML='';
+  data.slice().reverse().forEach(d=>{
+    tb.innerHTML+=`<tr><td>${d.unit}</td><td>${d.aduan}</td><td><span class="ai-badge">${d.agent}</span></td><td><span class="badge b-${d.status.split(' ')[0]}">${d.status}</span></td></tr>`;
+  });
+  document.getElementById('aCount').innerText=data.filter(x=>x.status=='Baru').length;
+  localStorage.setItem('easyBlueAI',JSON.stringify(data));
+}
+function save(){
+  let u=document.getElementById('unit').value.trim();
+  let a=document.getElementById('aduan').value.trim();
+  let s=document.getElementById('status').value;
+  if(!u||!a){alert('Isi Unit & Aduan dulu sayang!');return;}
+  let agent=getAIAgent(a);
+  data.push({unit:u,aduan:a,agent:agent,status:s});
+  render();
+  document.getElementById('msg').innerHTML=`✅ Berjaya! ${agent} telah di-assign untuk ${u}`;
+  document.getElementById('msg').style.display='block';
+  document.getElementById('aduan').value='';
+  setTimeout(()=>document.getElementById('msg').style.display='none',2500);
+}
+render();
 </script>
 </body>
 </html>
